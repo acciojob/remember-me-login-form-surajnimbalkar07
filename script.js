@@ -4,47 +4,56 @@ const checkbox = document.getElementById("checkbox");
 const existingBtn = document.getElementById("existing");
 const form = document.getElementById("loginForm");
 
-// Hide existing button initially
-existingBtn.style.display = "none";
-
-// On page load: show existing button if data exists
+// INITIAL PAGE LOAD
 document.addEventListener("DOMContentLoaded", () => {
-  username.value = "";
-  password.value = "";
-  checkbox.checked = false;
+    // Inputs must start empty
+    username.value = "";
+    password.value = "";
 
-  const savedUser = localStorage.getItem("username");
-  const savedPass = localStorage.getItem("password");
+    // Checkbox unchecked initially
+    checkbox.checked = false;
 
-  if (savedUser && savedPass) {
-    existingBtn.style.display = "inline-block";
-  }
+    // Check if saved credentials available
+    const savedUser = localStorage.getItem("username");
+    const savedPass = localStorage.getItem("password");
+
+    // Existing user button only visible if credentials exist
+    if (savedUser && savedPass) {
+        existingBtn.style.display = "inline-block";
+    } else {
+        existingBtn.style.display = "none";
+    }
 });
 
+// HANDLE FORM SUBMIT
 form.addEventListener("submit", function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const user = username.value.trim();
-  const pass = password.value;
+    const user = username.value.trim();
+    const pass = password.value;
 
-  if (checkbox.checked) {
-    // store credentials
-    localStorage.setItem("username", user);
-    localStorage.setItem("password", pass);
+    // REQUIRED ALERT (same for both cases)
+    alert(`Logged in as ${user}`);
 
-    alert("Credentials are stored in localStorage");
-    existingBtn.style.display = "inline-block";
-  } else {
-    // remove credentials
-    localStorage.removeItem("username");
-    localStorage.removeItem("password");
+    // If Remember Me checked → save credentials
+    if (checkbox.checked) {
+        localStorage.setItem("username", user);
+        localStorage.setItem("password", pass);
 
-    alert("Credentials are not stored");
-    existingBtn.style.display = "none";
-  }
+        existingBtn.style.display = "inline-block"; // show button
+    } 
+    // If NOT checked → remove any saved credentials
+    else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+
+        existingBtn.style.display = "none"; // hide button
+    }
 });
 
-existingBtn.addEventListener("click", function () {
-  const savedUser = localStorage.getItem("username");
-  alert(`Logged in as ${savedUser}`);
+// EXISTING USER LOGIN
+existingBtn.addEventListener("click", () => {
+    const savedUser = localStorage.getItem("username");
+
+    alert(`Logged in as ${savedUser}`);
 });
